@@ -1,0 +1,25 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.2.0
+    hooks:
+    -   id: trailing-whitespace
+        exclude: ^dependencies/
+    -   id: end-of-file-fixer
+        exclude: ^dependencies/
+    -   id: check-yaml
+        exclude: ^dependencies/
+    -   id: check-added-large-files
+        exclude: ^dependencies/
+-   repo: https://github.com/psf/black
+    rev: 22.10.0
+    hooks:
+    -   id: black
+        exclude: ^dependencies/
+-   repo: https://github.com/pycqa/isort
+    rev: 5.12.0
+    hooks:
+    -   id: isort
+        exclude: ^dependencies/
+        args: ["--profile", "black"]

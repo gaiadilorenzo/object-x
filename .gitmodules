@@ -1,0 +1,15 @@
+[submodule "dependencies/gaussian-splatting"]
+	path = dependencies/gaussian-splatting
+	url =  https://github.com/gaiadilorenzo/gaussian-splatting.git
+[submodule "dependencies/VLSG"]
+	path = dependencies/VLSG
+	url = https://github.com/y9miao/VLSG
+[submodule "dependencies/sgaligner"]
+	path = dependencies/sgaligner
+	url = https://github.com/sayands/sgaligner.git
+[submodule "dependencies/SceneGraphFusion"]
+	path = dependencies/SceneGraphFusion
+	url = https://github.com/ShunChengWu/SceneGraphFusion.git
+[submodule "dependencies/2d-gaussian-splatting"]
+	path = dependencies/2d-gaussian-splatting
+	url = https://github.com/gaiadilorenzo/2d-gaussian-splatting.git

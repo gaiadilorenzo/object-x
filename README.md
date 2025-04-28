@@ -28,3 +28,53 @@ In this work, we introduce a novel method **Graph2Splat** to learn rich scene gr
 Evaluated on two real-world datasets, Graph2Splat achieves high-fidelity novel view synthesis comparable to direct 3DGS reconstruction, while significantly improving geometric accuracy.
 Importantly, it needs 3-4 orders of magnitude less storage than other approaches, making it a practical and versatile solution for scene representation.
 
+
+## 🔨 Installation Guide
+
+The code is tested with the following dependencies
+
+- **Operating System**: Ubuntu
+- **Architecture**: x86_64 GNU/Linux
+- **Python Version**: 3.9.18
+- **CUDA Version**: 12.4
+- **NVIDIA Driver Version**: 550.144.03
+- **GPU**: NVIDIA A100 PCIe 40GB
+- **Total GPU Memory**: Above 40GB
+
+### Setting Up the Virtual Environment
+
+1. **Create and Activate a Virtual Environment**:
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate
+   ```
+   *(Ensure that your virtual environment is activated before proceeding with the installation.)*
+
+2. **Install dependencies from `requirements.txt`**:
+   ```bash
+   pip install -r requirements.txt
+   pip install -r other_deps.txt
+   ```
+
+3. **Install dependencies separately**
+    ```bash
+   pip install dependencies/gaussian-splatting
+   pip install git+https://github.com/nerfstudio-project/gsplat.git # Needed for evaluation
+   pip install dependencies/2d-gaussian-splatting # Needed for baselines evaluation
+   ```
+
+### Checking Installation
+
+After installing the dependencies, verify your environment:
+
+- **Check Python Version**:
+  ```bash
+  python --version
+  ```
+  *(Should output `Python 3.9.18`)*
+
+- **Check CUDA & GPU Availability**:
+  ```bash
+  nvidia-smi
+  ```
+  *(Ensure the GPU is detected and available for computation.)*

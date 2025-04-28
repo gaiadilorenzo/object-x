@@ -1,0 +1,31 @@
+# vscode
+.vscode
+pyrightconfig.json
+
+# test
+test/
+
+# checkpoint
+checkpoint/*
+
+# implementation
+implementation/*
+
+# pycache
+__pycache__/
+*.pyc
+
+# out
+**/outputs/
+**/output/
+**/out/
+**/tmp*/
+**/vis/
+
+# temporary files
+logs/
+*_ignore*
+
+# environment
+.venv/
+training_out/
