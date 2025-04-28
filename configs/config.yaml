@@ -1,0 +1,120 @@
+ # for Scan3R data
+data :
+  name            : Scan3R
+  rescan: True
+  resplit: True
+  preload_masks: True
+  img:
+    img_step: 1
+  img_encoding:
+    feature_dir: "Features2D/DinoV2_16_9_scan" # relative to data_root_dir/files
+  scene_graph:
+    obj_img_patch: "Features3D/obj_dinov2_top10_l3"
+    obj_patch_num: 100
+  preprocess :
+    subscenes_per_scene : 1
+
+
+# for scene graph embedding
+autoencoder:
+  guidance:             False
+  encoder:
+    rel_dim             : 41
+    img_patch_feat_dim  : 1536
+    multi_view_aggregator: 'transformer'
+    use_pretrained : False
+    pretrained: ""
+    label_file_name : labels.instances.annotated.v2.ply
+    modules       : ['voxel']
+
+    # backbone, currently not used here because we use pre-computed features for speed up
+    backbone:
+      # to be read in code from env varia, relative to VLSG_SPACE
+      use_pretrained: False
+      cfg_file: "./src/models/GCVit/configs/gcvit/cascade_mask_rcnn_gcvit_tiny_3x_coco.py"
+      pretrained: "./checkpoint/GCVit/gcvit_1k_tiny.pth.tar"
+      num_reduce: 0 # should be log2(resize_w/(32*patch_w))
+      backbone_dim: 1536 # dim of DinoV2 features
+
+    # patch feature encoder
+    patch:
+      hidden_dims: [512] # last is the out dim
+      encoder_dim: 400
+      gcn_layers: 2
+
+    other:
+      drop: 0.1
+
+    # 3D obj embedding encoder
+    obj:
+      # embedding_dim: 100 # fixed
+      embedding_dim: 300
+      embedding_hidden_dims: [656, 656]
+      encoder_dim: 656
+
+    voxel:
+      in_feature_dim: 9
+      out_feature_dim: 9
+      in_channel_res: 64
+      out_channel_res: 32
+      channels: [16, 32, 64]
+
+  decoder:
+    net: "sparsestructuretrellis"
+
+# implemetation
+mode: "train"
+output_dir: "training_out"
+local_rank: -1
+
+# for training
+train:
+  train_decoder: True
+  freeze_encoder: False
+  pc_res: 512
+  aux_channels: 0
+  batch_size: 1
+  num_workers: 2
+  use_pretrained: False
+  optim:
+    lr: 0.001
+    scheduler: "linear"
+    lr_decay: 0.97
+    lr_decay_steps: 1
+    lr_min: 0.00005
+    T_max: 1000
+    T_mult: 1
+    weight_decay: 0.01
+    max_epoch: 10500000
+    free_backbone_epoch: 10500 # freeze backbone until certain epochs
+    grad_acc_steps: 1
+  val_steps: 1
+  visualize_steps: 1
+  snapshot_steps: 1
+  loss:
+    use_temporal: True
+    loss_type: "IntraContrastiveLoss"
+    decoder_weight: 1.0
+    alpha: 0.5
+    temperature: 0.1
+    margin: 0.5
+  data_aug:
+    use_aug: False
+    img:
+      rotation: 60.0
+      horizontal_flip: 0.5
+      vertical_flip: 0.5
+      color: 0.3
+    use_aug_3D: False
+    pcs:
+      granularity: [0.05, 0.2, 0.4]
+      magnitude: [0.2, 0.4, 0.4]
+
+  # for vis
+  use_vis: False
+  vis_epoch_steps: 100
+
+# for validation
+val:
+  num_workers: 2
+  pretrained: "./"
