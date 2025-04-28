@@ -140,8 +140,10 @@ cd dependencies/VLSG && bash scripts/features2D/scan3r_dinov2.sh
 Run the following command to generate featured voxel annotations:
 ```bash
 bash scripts/voxel_annotations/voxelise_features.sh --split {split}
-# Optional: after following the instructions from sgaligner at dependencies/sgaligner to create subscenes annotations, we can run the following command to voxelise the features of the subscenes
-bash scripts/voxel_annotations/voxelise_features_scene_alignment.sh --split {split}
+# 2.5.1 Generating Subscenes Annotations (Optional)
+# Follow the instructions from SGAligner at dependencies/sgaligner to create subscenes annotations
+# Then run the following command:
+# bash scripts/voxel_annotations/voxelise_features_scene_alignment.sh --split {split}
 ```
 
 #### **2.6 Generating Gaussian Splat Annotations (Optional: Baseline Computation)**
@@ -203,8 +205,15 @@ After the above preprocessing, the directory structure should look as follows:
 │   │   ├── <meta_files_0>
 │   │   ├── <meta_files_1>
 │   │   ├── ...
-│   ├── scenes                <- Scans (3RScan/ScanNet)
+│   ├── scenes                     <- Scans (3RScan/ScanNet)
 │   │   ├── <id_scan_0>
 │   │   ├── <id_scan_1>
 │   │   ├── ...
+│   ├── scene_graph_fusion         <- (Step 3.1)
+│   │   ├── <id_scan_0>
+│   │   ├── <id_scan_1>
+│   │   ├── ...
+│   ├── out                        <- (Step 2.5.1)
+│   │   ├── files ...
+│   │   ├── scenes ...
 ```
