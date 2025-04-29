@@ -1,0 +1,120 @@
+# for Scan3R data
+data :
+  name            : Scan3R
+  rescan: True
+  temporal: True
+  resplit: True
+  img:
+    img_step: 1
+  img_encoding:
+    use_feature: True # use feature or raw image
+    preload_feature: False
+    feature_dir: "Features2D/DinoV2_16_9_scan" # relative to data_root_dir/files
+  cross_scene:
+    use_cross_scene: True
+    num_scenes: 9 # number of scenes
+    num_negative_samples: -1 # number of negative samples
+  scene_graph:
+    obj_img_patch: "Features3D/obj_dinov2_top10_l3"
+    obj_topk: 10
+    obj_patch_num: 100
+
+# for scene graph embedding
+autoencoder:
+  guidance:             False
+  encoder:
+    use_pretrained : True
+    label_file_name : labels.instances.annotated.v2.ply
+    pred_subfix     : inseg.ply
+
+    seed: 42
+    model_name    : 'sgaligner'
+    modules       : ['voxel', 'gat', 'attr', 'rel']
+    # modules       : ['point']
+    use_predicted : False
+    registration  : False
+    scan_type     : 'scan'
+    img_transformer: False
+    use_pos_enc: True
+    rel_dim             : 41
+    attr_dim            : 164
+    img_patch_feat_dim  : 1536
+    img_emb_dim: 256
+    alignment_thresh    : 0.4
+    multi_view_aggregator: 'transformer'
+
+    preprocess :
+      pc_resolutions      : [64, 128, 256, 512]
+      subscenes_per_scene : 1
+      filter_segment_size : 512
+      min_obj_points      : 50
+      anchor_type_name    : ''
+
+    backbone:
+      use_pretrained: False
+      cfg_file: "./src/models/GCVit/configs/gcvit/cascade_mask_rcnn_gcvit_tiny_3x_coco.py"
+      pretrained: "./checkpoint/GCVit/gcvit_1k_tiny.pth.tar"
+      num_reduce: 0 # should be log2(resize_w/(32*patch_w))
+      backbone_dim: 1536 # dim of DinoV2 features
+
+    patch:
+      hidden_dims: [512] # last is the out dim
+      encoder_dim: 400
+      gcn_layers: 2
+
+    obj:
+      embedding_dim: 37164 # fixed
+      # embedding_dim: 100
+      embedding_hidden_dims: [512, 512]
+      # encoder_dim: 36864
+      encoder_dim: 100
+
+    other:
+      drop: 0.1
+
+    voxel:
+      in_feature_dim: 9
+      out_feature_dim: 9
+      in_channel_res: 64
+      out_channel_res: 32
+      channels: [16, 32, 64]
+
+  decoder:
+    net: "sparsestructuretrellis"
+    modules: ['voxel']
+
+model_name    : 'ObjectPatchAligner'
+model:
+  # backbone, currently not used here because we use pre-computed features for speed up
+
+# implemetation
+mode: "train"
+task: "scene_graph_loc"
+# for training
+train:
+  pc_res: 512
+  batch_size: 1
+  num_workers: 2
+  log_steps: 1
+  snapshot_steps: 1
+  optim:
+    lr: 0.0011
+    scheduler: "step"
+    free_voxel_epoch: 3
+    free_sgaligner_epoch: -1 # freeze sgaligner until certain epochs
+    grad_acc_steps: 1
+  loss:
+    use_temporal: True
+    loss_type: "ICLLossBothSidesSumOutLog"
+
+  data_aug:
+    use_aug: True
+    use_aug_3D: False
+
+# for validation
+val:
+  batch_size: 1
+  num_workers: 2
+
+# others
+seed: 42
