@@ -29,6 +29,11 @@ Evaluated on two real-world datasets, Graph2Splat achieves high-fidelity novel v
 Importantly, it needs 3-4 orders of magnitude less storage than other approaches, making it a practical and versatile solution for scene representation.
 
 
+## ⏩ Code Release
+- [ ] Add code and instructions for evaluation
+- [ ] Add code and instructions for baseline evaluation
+- [ ] Release checkpoints and metadata for 3RScan and ScanNet
+
 ## 🔨 Installation Guide
 
 The code is tested with the following dependencies
