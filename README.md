@@ -221,3 +221,16 @@ After the above preprocessing, the directory structure should look as follows:
 ## 🏃‍♀️ Training
 
 Refer to the [TRAIN.md](TRAIN.md) for training instructions.
+
+
+## ♻️ Acknowledgments
+
+In this project we use (parts of) the official implementations of the following works:
+
+- SceneGraphLoc: [SceneGraphLoc](https://github.com/y9miao/VLSG)
+- Trellis: [Trellis](https://github.com/Microsoft/TRELLIS)
+- SGAligner: [SGAligner](https://github.com/sayands/sgaligner)
+- GSplat: [GSplat](https://github.com/nerfstudio-project/gsplat)
+- 2D Gaussian Splatting: [2D Gaussian Splatting](https://github.com/hbb1/2d-gaussian-splatting)
+- 3DSSG: [3DSSG](https://3dssg.github.io/)
+- SceneGraphFusion: [SceneGraphFusion](https://github.com/ShunChengWu/SceneGraphFusion)
