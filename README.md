@@ -217,3 +217,7 @@ After the above preprocessing, the directory structure should look as follows:
 │   │   ├── files ...
 │   │   ├── scenes ...
 ```
+
+## 🏃‍♀️ Training
+
+Refer to the [TRAIN.md](TRAIN.md) for training instructions.
