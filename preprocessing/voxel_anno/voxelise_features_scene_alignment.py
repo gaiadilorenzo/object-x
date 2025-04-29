@@ -2,6 +2,8 @@ import itertools
 import logging
 import os
 import os.path as osp
+import shutil
+import zipfile
 from argparse import ArgumentParser, Namespace
 from typing import Dict, Tuple
 
@@ -87,11 +89,18 @@ def _segment_mesh(mesh, indices):
     faces = np.asarray(mesh.triangles)
     vertices = np.asarray(mesh.vertices)
     index_map = {old_idx: dense_idx for dense_idx, old_idx in enumerate(indices)}
-
     # Filter faces that only contain selected vertices
     face_mask = np.all(np.isin(faces, indices), axis=1)
     selected_faces = faces[face_mask]
-    reindexed_faces = np.vectorize(index_map.get)(selected_faces)
+    try:
+        reindexed_faces = np.vectorize(index_map.get)(selected_faces)
+    except ValueError:
+        # If no faces are selected, create dummy faces to form a minimal mesh
+        _LOGGER.warning("No faces found for the selected points. Creating dummy faces.")
+        if len(indices) >= 3:
+            reindexed_faces = np.array([[0, 1, 2]])  # Form a single triangle
+        else:
+            raise ValueError("Not enough points to form a face.")
 
     # Create the segmented mesh
     segmented_mesh = o3d.geometry.TriangleMesh()
@@ -112,13 +121,19 @@ def segment_mesh(mesh, annos, obj_id, scan_id):
     return segmented_mesh
 
 
+def trasform_to_ref(
+    mesh: o3d.geometry.TriangleMesh,
+    transform: np.ndarray,
+) -> o3d.geometry.TriangleMesh:
+    return mesh.transform(transform)
+
+
 @torch.no_grad()
 def annotate_gaussian(
     obj_data: Dict[str, str],
     scan_id: str,
     mode: str = "gs_annotations",
 ) -> None:
-
     scenes_dir = osp.join(root_dir, "scenes")
     original_scan_id = scan_id.split("_")[0]
     frame_idxs = scan3r.load_frame_idxs(data_dir=scenes_dir, scan_id=original_scan_id)
@@ -166,6 +181,13 @@ def annotate_gaussian(
         scan_id=original_scan_id,
         label_file_name="labels.instances.annotated.v2.ply",
     )
+
+    if original_scan_id not in tranform_matrices:
+        return
+    original_mesh = trasform_to_ref(
+        original_mesh, tranform_matrices[original_scan_id].transpose()
+    )
+
     # index of vertices in the original mesh
     original_vertices = np.asarray(original_mesh.vertices)
     # find the indices where points of the new pcd are the same as the original one
@@ -179,12 +201,18 @@ def annotate_gaussian(
         label_file_name="labels.instances.annotated.v2.ply",
     )["vertex"]["objectId"][indices]
 
+    assert data["objectId"].shape == annos.shape
+    unique_ids_data, counts_data = np.unique(data["objectId"], return_counts=True)
+    unique_ids_annos, counts_annos = np.unique(annos, return_counts=True)
+    if not np.array_equal(unique_ids_data, unique_ids_annos):
+        _LOGGER.warning(f"{scan_id}: {unique_ids_data} != {unique_ids_annos}")
     for obj in obj_data["objects"]:
         try:
             os.makedirs(
                 osp.join(args.model_dir, "files", mode, scan_id, str(obj["id"])),
                 exist_ok=True,
             )
+
             voxel_path = osp.join(
                 args.model_dir,
                 "files",
@@ -218,7 +246,7 @@ def annotate_gaussian(
             mean = vertices.mean(axis=0)
             vertices -= mean
             scale = np.max(np.abs(vertices))
-            vertices *= 1.0 / (2 * scale)
+            vertices *= 1.0 / (2 * scale + 1e-3)
             vertices = np.clip(vertices, -0.5 + 1e-6, 0.5 - 1e-6)
             segmented_mesh.vertices = o3d.utility.Vector3dVector(vertices)
 
@@ -360,8 +388,8 @@ def annotate_gaussian(
                 voxel_grid,
                 output_file=voxel_path,
             )
-        except (FileNotFoundError, RuntimeError, ValueError) as e:
-            _LOGGER.exception(f"Error processing {scan_id} ({obj_id}): {e}")
+        except (FileNotFoundError, RuntimeError, ValueError, zipfile.BadZipFile) as e:
+            _LOGGER.exception(f"Error processing: {e}")
 
 
 def process_data(
@@ -381,7 +409,7 @@ def process_data(
         a["ref"] for a in anchor_data
     ]
 
-    all_subscan_ids = set(src_scan_ids + ref_scan_ids)
+    all_subscan_ids = sorted(list(set(src_scan_ids + ref_scan_ids)))[776:]
     subscan_ids_processed = []
     for subscan_id in tqdm(all_subscan_ids):
         obj_data = next(
@@ -448,6 +476,8 @@ if __name__ == "__main__":
             transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
         ]
     )
-
+    tranform_matrices = scan3r.read_transform_mat(
+        osp.join(root_dir, "files", "3RScan.json")
+    )
     # STEP 2: Process data
     scan_ids = process_data(cfg, mode="gs_annotations", split=args.split)
