@@ -3,7 +3,7 @@
     <p align="center">
     <a>Gaia Di Lorenzo</a><sup>1</sup>
     .
-    <a>Federico Tamberi</a><sup>3</sup>
+    <a>Federico Tombari</a><sup>3</sup>
     .
     <a>Marc Pollefeys</a><sup>1, 2</sup>
     .
