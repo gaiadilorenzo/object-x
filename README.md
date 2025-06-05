@@ -11,7 +11,7 @@
     .
   </p>
   <p align="center">
-    <sup>1</sup>ETH Zürich · <sup>2</sup>Microsoft Spatial AI Lab · <sup>3</sup>Google
+    <sup>1</sup>ETH Zürich · <sup>2</sup>Microsoft · <sup>3</sup>Google
   </p>
 </p>
 
