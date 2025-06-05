@@ -1,5 +1,5 @@
 <p align="center">
-  <h2 align="center"> Graph2Splat: Learning 3D Gaussian Splats from Scene Graph Embeddings </h2>
+  <h2 align="center"> Object-X: Learning to Reconstruct Multi-Modal 3D Object Representations </h2>
     <p align="center">
     <a>Gaia Di Lorenzo</a><sup>1</sup>
     .
@@ -23,11 +23,7 @@
 
 ## 📃 Abstract
 
-3D scene representation is crucial for many computer vision applications such as robotics and augmented reality. Traditional methods like point clouds require significant storage, hindering their practicality. While 3D scene graphs offer a lightweight alternative by representing scenes as interconnected objects, they lack the geometric and visual detail needed for many tasks.
-In this work, we introduce a novel method **Graph2Splat** to learn rich scene graph node embeddings, enabling both efficient 3D scene reconstruction and direct application in other downstream tasks. Graph2Splat predicts a 3D Gaussian Splat (3DGS) representation for each object from its embedding, capturing both appearance and geometry.
-Evaluated on two real-world datasets, Graph2Splat achieves high-fidelity novel view synthesis comparable to direct 3DGS reconstruction, while significantly improving geometric accuracy.
-Importantly, it needs 3-4 orders of magnitude less storage than other approaches, making it a practical and versatile solution for scene representation.
-
+Learning effective multi-modal 3D representations of objects is essential for numerous applications, such as augmented reality and robotics. Existing methods often rely on task-specific embeddings that are tailored either for semantic understanding or geometric reconstruction. As a result, these embeddings typically cannot be decoded into explicit geometry and simultaneously reused across tasks. In this paper, we propose Object-X, a versatile multi-modal object representation framework capable of encoding rich object embeddings (e.g., images, point cloud, text) and decoding them back into detailed geometric and visual reconstructions. Object-X operates by geometrically grounding the captured modalities in a 3D voxel grid and learning an unstructured embedding fusing the information from the voxels with the object attributes. The learned embedding enables 3D Gaussian Splatting-based object reconstruction, while also supporting a range of downstream tasks, including scene alignment, single-image 3D object reconstruction, and localization. Evaluations on two challenging real-world datasets demonstrate that Object-X produces high-fidelity novel-view synthesis comparable to standard 3D Gaussian Splatting, while significantly improving geometric accuracy.Moreover, Object-X achieves competitive performance with specialized methods in scene alignment and localization Critically, our object-centric descriptors require 3-4 orders of magnitude less storage compared to traditional image- or point cloud-based approaches, establishing Object-X as a scalable and highly practical solution for multi-modal 3D scene representation.
 
 ## ⏩ Code Release
 - [ ] Add code and instructions for evaluation
