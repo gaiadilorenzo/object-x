@@ -53,7 +53,7 @@ The code is tested with the following dependencies
 
 2. **Install dependencies from `requirements.txt`**:
    ```bash
-   pip install -r requirements.txt
+   pip install -r requirements.txt # add [--no-deps] if installation causes dependency issues
    pip install -r other_deps.txt
    ```
 
