@@ -223,6 +223,18 @@ After the above preprocessing, the directory structure should look as follows:
 
 Refer to the [TRAIN.md](TRAIN.md) for training instructions.
 
+## 📕 BibTeX 
+```
+@misc{dilorenzo2025objectxlearningreconstructmultimodal,
+      title={Object-X: Learning to Reconstruct Multi-Modal 3D Object Representations}, 
+      author={Gaia Di Lorenzo and Federico Tombari and Marc Pollefeys and Daniel Barath},
+      year={2025},
+      eprint={2506.04789},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2506.04789}, 
+}
+ ```
 
 ## ♻️ Acknowledgments
 
