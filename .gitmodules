@@ -1,6 +1,6 @@
 [submodule "dependencies/gaussian-splatting"]
 	path = dependencies/gaussian-splatting
-	url =  https://github.com/gaiadilorenzo/gaussian-splatting.git
+	url = https://github.com/gaiadilorenzo/gaussian-splatting.git
 [submodule "dependencies/VLSG"]
 	path = dependencies/VLSG
 	url = https://github.com/y9miao/VLSG
