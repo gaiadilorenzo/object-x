@@ -16,7 +16,7 @@ from plyfile import PlyData, PlyElement
 from scipy.spatial import ConvexHull
 from scipy.spatial.transform import Rotation as R
 
-from utils import common, define, point_cloud
+from utils import common, point_cloud
 
 
 class platte:
