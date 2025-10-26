@@ -1,5 +1,5 @@
 <p align="center">
-  <h2 align="center"> Object-X: Learning to Reconstruct Multi-Modal 3D Object Representations </h2>
+  <h2 align="center"> [NeurIPS 2025] Object-X: Learning to Reconstruct Multi-Modal 3D Object Representations </h2>
     <p align="center">
     <a>Gaia Di Lorenzo</a><sup>1</sup>
     .
